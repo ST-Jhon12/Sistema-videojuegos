@@ -4,17 +4,17 @@
 
 ## Descripción
 
-Este repositorio contiene el desarrollo de LOvEL SHOP, una tienda online diseñada para ofrecer una experiencia de compra moderna, responsiva y funcional. El proyecto incluye tanto el frontend como el backend integrados en un mismo repositorio, desarrollado como parte de una iniciativa individual utilizando metodologías ágiles.
+Este repositorio contiene el desarrollo de gamebird, que es un sistema de videojuegos en el que te permitira buscar, descargar cualquier juego. manual o libro que estes buscando sin la necesidad de tener una cuenta, para poder acceder a mas contenido o mucho mas debe registrarse y iniciar sesion.
 
 
 
 ## Características Principales
 
-- Registro e inicio de sesión de usuarios con autenticación.
+- Registro de usuario.
 
-- Catálogo de productos por categorías.
+- Ajustes de usuario.
 
-- Carrito de compras funcional con sistema de pedidos.
+- Administración de contenido del juego.
 
 
 
@@ -46,9 +46,9 @@ en sus respectivas carpetas.
 
 ## Diseño
 
-- **Figma:** [https://www.figma.com/design/uHOo5HiVdv8DNJB2gU36GF/TIENDA-ONLINE?node-id=0-1&t=FK2FDoebV1CBFVkO-1]
+- **Figma:** [https://www.figma.com/design/ceEEH5tQAih7F9nPkD50TZ/SISTEMA-VIDEoJUEGO?node-id=0-1&t=gac13qK7JcZPOfQW-1]
 
-- **Trello:** [https://trello.com/b/KMKuzPyQ/app-tienda-online]
+- **Trello:** [https://trello.com/b/zYQDNM5U/sistema-videojuego]
 
 
 
@@ -64,11 +64,11 @@ en sus respectivas carpetas.
 
 ## Equipo
 
-- **Scrum Master:** Angel Gonzales
+- **Scrum Master:** Jhon Peter
 
 - **Product Owner:** Magenta Paredes
 
-- **Developers:** Angel Gonzales
+- **Developers:** Jhon Peter
 
 
 
@@ -78,7 +78,7 @@ en sus respectivas carpetas.
 
 # Clonar el repositorio
 
-git clone https://github.com/Angel-glicht/PIAD-PROYECTO-301.git
+git https://github.com/ST-Jhon12/Sistema-videojuegos.git
 
 
 
