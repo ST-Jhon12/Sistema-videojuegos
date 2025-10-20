@@ -32,18 +32,18 @@ Este documento centraliza toda la información sobre los **diseños y prototipos
 ### Sistema de Diseño
 
 **Paleta de colores:**
-- **Color primario:** #XXXXXX - Acciones principales
-- **Color secundario:** #XXXXXX - Elementos complementarios
-- **Color de acento:** #XXXXXX - Llamadas a la acción
+- **Color primario:** #B96CD8 - Acciones principales
+- **Color secundario:** #86A3B0 - Elementos complementarios
+- **Color de acento:** #FFFFFF - Llamadas a la acción
 - **Colores de estado:**
-  - Éxito: #XXXXXX
-  - Error: #XXXXXX
-  - Advertencia: #XXXXXX
-  - Info: #XXXXXX
+  - Éxito: #50FF05
+  - Error: #FF0000
+  - Advertencia: #062FFF
+  - Info: #000000
 
 **Tipografía:**
-- **Principal:** [Nombre de fuente] - Textos y contenido
-- **Títulos:** [Nombre de fuente] - Encabezados
+- **Principal:** Inria - Textos y contenido
+- **Títulos:** Inter - Encabezados
 
 
 **Espaciado:**

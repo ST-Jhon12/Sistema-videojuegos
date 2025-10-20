@@ -1,16 +1,14 @@
-# Sprint Planning - Sprint [Número]
+# Sprint Planning - Sprint [1]
 
-**Fecha de Planning:** [DD/MM/YYYY]
-**Duración del Sprint:** [X semanas]
+**Fecha de Planning:** [05/10/2026]
+**Duración del Sprint:** [1 semanas]
 
 ## Objetivo del Sprint
-[Descripción clara de qué valor se entregará]
-
-## Product Backlog Seleccionado
+Prototipo de baja fidelidad
 
 ### Historias de Usuario Comprometidas
 
-#### Historia #1: [Título]
+#### Historia #1: [Diseño del ]
 - **Como:** [rol]
 - **Quiero:** [funcionalidad]
 - **Para:** [beneficio]
