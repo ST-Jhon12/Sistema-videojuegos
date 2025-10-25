@@ -2,5 +2,26 @@
   "dependencies": {
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
-  }
+  },
+  "name": "sistema-videojuegos",
+  "version": "1.0.0",
+  "description": "Este repositorio contiene el desarrollo de gamebird, que es un sistema de videojuegos en el que te permitira buscar, descargar cualquier juego. manual o libro que estes buscando sin la necesidad de tener una cuenta, para poder acceder a mas contenido o mucho mas debe registrarse y iniciar sesion.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ST-Jhon12/Sistema-videojuegos.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ST-Jhon12/Sistema-videojuegos/issues"
+  },
+  "homepage": "https://github.com/ST-Jhon12/Sistema-videojuegos#readme"
 }
