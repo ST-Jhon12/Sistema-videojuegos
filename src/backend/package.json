@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "API REST desarrollada con Node.js, Express y PostgreSQL (Prisma ORM).",
   "main": "index.js",
   "type": "module",
   "scripts": {
