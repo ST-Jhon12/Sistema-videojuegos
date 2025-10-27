@@ -10,18 +10,18 @@ export const userService ={
             return await prisma.user.create({
                 data :{email, name}
             })
-        }catch(error){
-            throw error('Error al crear usuario' + error.message);
-        }
+    }catch(error){
+      throw new Error('Error al crear usuario: ' + error.message);
+    }
     },
 
     //Obtener usuarios
     async getAllUsers(){
         try{
             return await prisma.user.findMany();
-        }catch(error){
-            throw error ('Error al obtener usuarios' + error.message);
-        }
+    }catch(error){
+      throw new Error('Error al obtener usuarios: ' + error.message);
+    }
     },
 
     async updateUser(id, data) {
