@@ -1,4 +1,4 @@
-function home() {
+function Home() {
   return(
     <div className="min-h-screen bg-gray-100 p-a">
         <h1 className="text-4xl font-bold text-center text-gray-800 mt-10">Bienvenido a la Página de Inicio</h1>
@@ -7,4 +7,4 @@ function home() {
   );
 }
 
-export default home;
+export default Home;
