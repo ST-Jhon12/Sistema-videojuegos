@@ -1,6 +1,6 @@
 // controllers/userController.js
 
-import { sendEmail } from "../services/emailServices.js";
+import { sendEmail } from "../controllers/emailController.js";
 
 /**
  * Controlador para registrar un nuevo usuario.
