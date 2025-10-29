@@ -1,8 +1,12 @@
+/**@type {import { 'tailwindcss' }.Config} */
 export default {
-
- plugins: {
-    tailwindcss: {}, // Example: Integrating Tailwind CSS
-    autoprefixer: {}, // Example: Adding vendor prefixes
-    'postcss-preset-env': { // Example: Using postcss-preset-env with options
-     stage: 3,
-    };
+   content: [ "./index.html", "./src/**/*.{js,ts,jsx,tsx}" ],
+   theme: {
+     extend: {
+     fontfamily: {
+      sans: ['Helvetica', 'Arial', 'sans-serif'],
+     }
+   }
+},
+   plugins: [],
+ }
