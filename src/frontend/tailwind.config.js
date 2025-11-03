@@ -1,13 +1,16 @@
-/**@type {import { 'tailwindcss' }.Config} */
+/** @type {import('tailwindcss').Config} */
 export default {
-   content: [ "./index.html", "./src/**/*.{js,ts,jsx,tsx}",
-      "../pages/*.{js,ts,jsx,tsx}" ],
-   theme: {
-     extend: {
-     fontfamily: {
-      sans: ['Helvetica', 'Arial', 'sans-serif'],
-     }
-   }
-},
-   plugins: [],
- }
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./pages/**/*.{js,ts,jsx,tsx}", // 👈 Incluye tu carpeta "pages"
+  ],
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Helvetica', 'Arial', 'sans-serif'],
+      },
+    },
+  },
+  plugins: [],
+};
