@@ -12,9 +12,9 @@ export const authControllers = {
             
             const token = authServices.generateToken(user.id, user.email);
             
-            res.redirect(`https://localhost:5173/`); //url de frontend
+            res.redirect(`http://localhost:5173/`); //url de frontend
         } catch (error){
-            res.redirect(`https://localhost:5173/`);
+            res.redirect(`http://localhost:5173/`);
         }
     }
 };

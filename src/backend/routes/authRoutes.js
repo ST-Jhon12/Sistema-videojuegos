@@ -1,5 +1,6 @@
 import express from "express";
 import { authControllers } from "../controllers/authControllers.js";
+import passport from "passport";
 //import { autenticate } from "../middlewares/authMiddlewares.js";
 
 const router = express.Router();
@@ -46,10 +47,13 @@ const router = express.Router();
  */
 router.post("/register", authControllers.register);
 
+router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
+
 router.get(
   "/google/callback",
   passport.authenticate("google", {
-    failureRedirect: `https://localhost:5173/login-error`,
+    failureRedirect: "http://localhost:5173/login-error",
+    successRedirect: "http://localhost:5173/dashboard", // <- opcional pero útil
   }),
   authControllers.googleCallback
 );

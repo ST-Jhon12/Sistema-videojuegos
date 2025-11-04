@@ -1,14 +1,17 @@
-import express from "express";
-import cors from "cors";
 import dotenv from "dotenv";
+
+dotenv.config();
+
 import passport from "passport";
+import session from "express-session";
 import emailRoutes from "./routes/emailRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import "./config/passport.js";
 import userRoutes from "./routes/userRoutes.js";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./swagger.js";
-
-dotenv.config();
+import express from "express";
+import cors from "cors";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -42,6 +45,7 @@ app.get("/", (req, res) => {
 //Rutas que deseo usar
 app.use("/api/users", userRoutes);
 app.use("/api/email", emailRoutes);
+app.use("/api/auth", authRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo y escuchando en el puerto ${PORT}`);
