@@ -1,47 +1,53 @@
 import { motion } from "framer-motion";
-import { FaGoogle, FaFacebook, FaTwitter, FaDiscord } from "react-icons/fa";
+import { FaGoogle, FaFacebook, FaTwitter, FaDiscord, FaUserAlt, FaLock } from "react-icons/fa";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function Login() {
 const GOOGLE_AUTH_URL = import.meta.env.VITE_GOOGLE_AUTH_URL;
-const bubbles = Array.from({ length: 40 }); // número de burbujas
+const [email, setEmail] = useState("");
+const [password, setPassword] = useState("");
+const navigate = useNavigate();
+const bubbles = Array.from({ length: 40 });
+
+const handleLogin = async (e) => {
+e.preventDefault();
+try {
+const res = await fetch("[http://localhost:3000/api/auth/login](http://localhost:3000/api/auth/login)", {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify({ email, password }),
+});
+
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message);
+
+  localStorage.setItem("authToken", data.data.token);
+  navigate(`/login-success?token=${data.data.token}`);
+} catch (error) {
+  console.error("Error al iniciar sesión:", error);
+  navigate("/login-error");
+}
+
+};
 
 return ( <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-6 relative overflow-hidden">
 {/* 🌬️ Burbujas flotantes diagonales */}
 {bubbles.map((_, i) => {
-const size = Math.random() * 30 + 10; // tamaño entre 10 y 40px
+const size = Math.random() * 30 + 10;
 const delay = Math.random() * 10;
 const duration = Math.random() * 12 + 8;
-const startX = Math.random() * 200 - 100; // cerca del borde izquierdo
-const endX = startX + 600 + Math.random() * 400; // hacia la derecha
-
+const startX = Math.random() * 200 - 100;
+const endX = startX + 600 + Math.random() * 400;
 
     return (
       <motion.div
         key={i}
         className="absolute rounded-full bg-white/40 backdrop-blur-sm"
-        style={{
-          width: size,
-          height: size,
-          left: startX,
-        }}
-        initial={{
-          x: startX,
-          y: 800 + Math.random() * 200,
-          opacity: 0,
-          scale: 0.8,
-        }}
-        animate={{
-          x: endX,
-          y: -150,
-          opacity: [0.4, 0.8, 0.4],
-          scale: [1, 1.2, 1],
-        }}
-        transition={{
-          duration,
-          repeat: Infinity,
-          ease: "linear",
-          delay,
-        }}
+        style={{ width: size, height: size, left: startX }}
+        initial={{ x: startX, y: 800 + Math.random() * 200, opacity: 0, scale: 0.8 }}
+        animate={{ x: endX, y: -150, opacity: [0.4, 0.8, 0.4], scale: [1, 1.2, 1] }}
+        transition={{ duration, repeat: Infinity, ease: "linear", delay }}
       />
     );
   })}
@@ -60,7 +66,7 @@ const endX = startX + 600 + Math.random() * 400; // hacia la derecha
   <motion.div
     initial={{ opacity: 0, y: 50 }}
     animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.8, ease: "easeOut" }}
+    transition={{ duration: 1, ease: "easeOut" }}
     className="bg-white/20 backdrop-blur-xl rounded-2xl shadow-2xl p-10 w-full max-w-md text-center text-white border border-white/30 relative z-10"
   >
     <motion.h1
@@ -69,7 +75,7 @@ const endX = startX + 600 + Math.random() * 400; // hacia la derecha
       transition={{ delay: 0.3 }}
       className="text-4xl font-extrabold mb-4 drop-shadow-lg"
     >
-      🎮 Bienvenido Usuario
+      🎮 Bienvenido Gamer
     </motion.h1>
 
     <motion.p
@@ -78,8 +84,44 @@ const endX = startX + 600 + Math.random() * 400; // hacia la derecha
       transition={{ delay: 0.5 }}
       className="text-lg opacity-90 mb-8"
     >
-      Inicia sesión para descubrir un mundo de videojuegos épicos.
+      Inicia sesión para continuar tu aventura.
     </motion.p>
+
+    {/* 🧾 Formulario */}
+    <form onSubmit={handleLogin} className="flex flex-col gap-4 mb-6">
+      <div className="flex items-center bg-white/10 border border-white/20 rounded-full px-5 py-3">
+        <FaUserAlt className="mr-3 text-white/80" />
+        <input
+          type="email"
+          placeholder="Correo electrónico"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          className="bg-transparent flex-1 outline-none text-white placeholder-white/60"
+        />
+      </div>
+
+      <div className="flex items-center bg-white/10 border border-white/20 rounded-full px-5 py-3">
+        <FaLock className="mr-3 text-white/80" />
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className="bg-transparent flex-1 outline-none text-white placeholder-white/60"
+        />
+      </div>
+
+      <motion.button
+        type="submit"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className="mt-4 bg-white text-gray-800 font-semibold py-3 rounded-full shadow-md hover:shadow-lg transition-all duration-300"
+      >
+        Iniciar sesión
+      </motion.button>
+    </form>
 
     {/* 🔐 Botón Google */}
     <motion.a
@@ -112,16 +154,12 @@ const endX = startX + 600 + Math.random() * 400; // hacia la derecha
       className="text-sm mt-8 opacity-75"
     >
       ¿No tienes una cuenta?{" "}
-      <a
-        href="/register"
-        className="text-white font-semibold hover:underline"
-      >
+      <a href="/register" className="text-white font-semibold hover:underline">
         Regístrate aquí
       </a>
     </motion.p>
   </motion.div>
 </div>
-
 
 );
 }
