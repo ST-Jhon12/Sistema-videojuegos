@@ -20,29 +20,6 @@ const router = express.Router();
  *  post:
  *    summary: Registrar nuevo usuario
  *    tags: [Auth]
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              email:
- *                type: string
- *                example: margarita@gmail.com
- *              name:
- *                type: string
- *                example: Margarita
- *              password:
- *                type: string
- *                example: patito123
- *    responses:
- *      201:
- *        description: Usuario registrado exitosamente
- *      400:
- *        description: Datos enviados incorrectos
- *      500:
- *        description: Error interno del servidor
  */
 router.post("/register", authControllers.register);
 
@@ -52,41 +29,32 @@ router.post("/register", authControllers.register);
  *  post:
  *    summary: Iniciar sesión de usuario
  *    tags: [Auth]
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              email:
- *                type: string
- *                example: thiagoTello@gmail.com
- *              password:
- *                type: string
- *                example: 123
- *    responses:
- *      200:
- *        description: Inicio de sesión exitoso
- *      400:
- *        description: Credenciales incorrectas
- *      500:
- *        description: Error interno del servidor
  */
 router.post("/login", authControllers.login);
 
-router.get(
-  "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
+/**
+ * @swagger
+ * /api/auth/verify:
+ *  get:
+ *    summary: Verifica si el token JWT es válido
+ *    tags: [Auth]
+ *    security:
+ *      - BearerAuth: []
+ *    responses:
+ *      200:
+ *        description: Token válido
+ *      401:
+ *        description: Token inválido o expirado
+ */
+router.get("/verify", authControllers.verifyToken); // ✅ usar el controlador
+
+// 🔹 Google OAuth
+router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", {
-    failureRedirect: "http://localhost:5173/login-error",
-  }),
+  passport.authenticate("google", { failureRedirect: "http://localhost:5173/login-error" }),
   authControllers.googleCallBack
 );
-
 
 export default router;

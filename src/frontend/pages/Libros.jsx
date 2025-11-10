@@ -3,11 +3,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaSearch, FaUserCircle, FaMoon } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
 
-export default function Inicio() {
+export default function Libros() {
   const navigate = useNavigate();
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const games = Array.from({ length: 30 });
+  const libros = Array.from({ length: 60 });
 
   return (
     <div className="min-h-screen bg-slate-700 flex flex-col items-center">
@@ -24,16 +24,15 @@ export default function Inicio() {
 
         {/* Navegación */}
         <nav className="flex gap-10 text-lg font-medium">
-          <Link
-            to="/inicio"
-            className="text-gray-200 font-semibold border-b-2 border-white"
-          >
+          <Link to="/inicio" className="hover:text-gray-200">
             Inicio
           </Link>
           <Link to="/biblioteca" className="hover:text-gray-200">
             Biblioteca
           </Link>
-          <Link to="/libros" className="hover:text-gray-200">
+          <Link
+            to="/libros"
+            className="text-gray-200 font-semibold border-b-2 border-white">
             Libros
           </Link>
           <a href="#" className="hover:text-gray-200">
@@ -61,7 +60,7 @@ export default function Inicio() {
                 <FaSearch className="text-gray-400 mr-3" />
                 <input
                   type="text"
-                  placeholder="Buscar juegos o libros..."
+                  placeholder="Buscar libros o autores..."
                   className="flex-1 text-gray-800 outline-none text-sm bg-transparent"
                   value={searchText}
                   onChange={(e) => setSearchText(e.target.value)}
@@ -79,7 +78,7 @@ export default function Inicio() {
         </div>
       </header>
 
-      {/* 🧩 Contenido principal */}
+      {/* 📚 Contenido principal */}
       <motion.main
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -92,7 +91,7 @@ export default function Inicio() {
           transition={{ duration: 0.8 }}
           className="text-5xl font-extrabold text-gray-900 mb-6"
         >
-          Tu centro <span className="text-pink-500">Gaming</span>
+          Tu colección de <span className="text-pink-500">Libros</span>
         </motion.h2>
 
         <motion.p
@@ -101,9 +100,8 @@ export default function Inicio() {
           transition={{ delay: 0.3 }}
           className="text-xl text-pink-100 mb-14 max-w-3xl leading-relaxed text-center"
         >
-          Descubre, juega y conecta con la mejor colección de videojuegos,
-          libros y tendencias del gaming. Explora nuevos mundos y vive la
-          experiencia gamer definitiva.
+          Explora nuestra biblioteca digital, donde encontrarás desde novelas
+          clásicas hasta guías del mundo gamer. 📖✨
         </motion.p>
 
         <motion.h3
@@ -112,24 +110,24 @@ export default function Inicio() {
           transition={{ delay: 0.6 }}
           className="text-left w-full text-3xl font-semibold text-gray-900 mb-6"
         >
-          Juegos destacados
+          Libros disponibles
         </motion.h3>
 
-        {/* 🎮 Cuadrícula animada */}
+        {/* 📚 Cuadrícula animada */}
         <motion.div
-          className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6"
+          className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-6"
           initial="hidden"
           animate="visible"
           variants={{
             hidden: {},
             visible: {
               transition: {
-                staggerChildren: 0.05,
+                staggerChildren: 0.03,
               },
             },
           }}
         >
-          {games.map((_, i) => (
+          {libros.map((_, i) => (
             <motion.div
               key={i}
               variants={{
@@ -137,9 +135,9 @@ export default function Inicio() {
                 visible: { opacity: 1, scale: 1 },
               }}
               transition={{ duration: 0.4 }}
-              className="bg-white/70 rounded-xl flex items-center justify-center p-4 shadow-md hover:shadow-xl hover:scale-105 transition-all cursor-pointer"
+              className="w-28 h-36 bg-white/80 rounded-lg flex items-center justify-center shadow-md hover:shadow-xl hover:scale-105 transition-all cursor-pointer"
             >
-              <span className="text-5xl text-gray-500">🖼️</span>
+              <span className="text-4xl text-gray-500">📘</span>
             </motion.div>
           ))}
         </motion.div>

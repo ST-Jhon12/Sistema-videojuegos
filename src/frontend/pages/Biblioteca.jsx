@@ -1,13 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaSearch, FaUserCircle, FaMoon } from "react-icons/fa";
-import { useNavigate, Link } from "react-router-dom";
+import { Image } from "lucide-react";
 
-export default function Inicio() {
+export default function Biblioteca() {
   const navigate = useNavigate();
+  const [juegos, setJuegos] = useState([]);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const games = Array.from({ length: 30 });
+
+  // 📦 Cargar juegos del backend
+  useEffect(() => {
+    fetch("http://localhost:3000/api/juegos")
+      .then((res) => res.json())
+      .then((data) => setJuegos(data))
+      .catch((err) => console.error("Error al cargar los juegos:", err));
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-700 flex flex-col items-center">
@@ -24,13 +33,10 @@ export default function Inicio() {
 
         {/* Navegación */}
         <nav className="flex gap-10 text-lg font-medium">
-          <Link
-            to="/inicio"
-            className="text-gray-200 font-semibold border-b-2 border-white"
-          >
+          <Link to="/inicio" className="hover:text-gray-200">
             Inicio
           </Link>
-          <Link to="/biblioteca" className="hover:text-gray-200">
+          <Link to="/biblioteca" className="text-gray-200 font-bold">
             Biblioteca
           </Link>
           <Link to="/libros" className="hover:text-gray-200">
@@ -41,14 +47,13 @@ export default function Inicio() {
           </a>
         </nav>
 
-        {/* Iconos y buscador */}
+        {/* 🔍 Buscador + iconos */}
         <div className="flex items-center gap-4 text-2xl relative">
           <FaSearch
             className="cursor-pointer hover:text-gray-200 transition"
             onClick={() => setSearchOpen(!searchOpen)}
           />
 
-          {/* 🔍 Buscador animado */}
           <AnimatePresence>
             {searchOpen && (
               <motion.div
@@ -90,34 +95,24 @@ export default function Inicio() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-5xl font-extrabold text-gray-900 mb-6"
+          className="text-4xl font-extrabold text-gray-900 mb-6"
         >
-          Tu centro <span className="text-pink-500">Gaming</span>
+          Tu <span className="text-pink-500">Biblioteca</span> personal
         </motion.h2>
 
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="text-xl text-pink-100 mb-14 max-w-3xl leading-relaxed text-center"
+          className="text-lg text-pink-100 mb-12 max-w-3xl leading-relaxed text-center"
         >
-          Descubre, juega y conecta con la mejor colección de videojuegos,
-          libros y tendencias del gaming. Explora nuevos mundos y vive la
-          experiencia gamer definitiva.
+          Aquí puedes ver todos los juegos que forman parte de tu colección.  
+          Explora y redescubre tus títulos favoritos 🎮
         </motion.p>
 
-        <motion.h3
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="text-left w-full text-3xl font-semibold text-gray-900 mb-6"
-        >
-          Juegos destacados
-        </motion.h3>
-
-        {/* 🎮 Cuadrícula animada */}
+        {/* 🕹️ Cuadrícula animada de juegos */}
         <motion.div
-          className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6"
+          className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-10 gap-6"
           initial="hidden"
           animate="visible"
           variants={{
@@ -129,19 +124,44 @@ export default function Inicio() {
             },
           }}
         >
-          {games.map((_, i) => (
-            <motion.div
-              key={i}
-              variants={{
-                hidden: { opacity: 0, scale: 0.8 },
-                visible: { opacity: 1, scale: 1 },
-              }}
-              transition={{ duration: 0.4 }}
-              className="bg-white/70 rounded-xl flex items-center justify-center p-4 shadow-md hover:shadow-xl hover:scale-105 transition-all cursor-pointer"
-            >
-              <span className="text-5xl text-gray-500">🖼️</span>
-            </motion.div>
-          ))}
+          {juegos.length > 0
+            ? juegos.map((juego, i) => (
+                <motion.div
+                  key={juego.id || i}
+                  variants={{
+                    hidden: { opacity: 0, scale: 0.8 },
+                    visible: { opacity: 1, scale: 1 },
+                  }}
+                  transition={{ duration: 0.4 }}
+                  className="bg-white/70 rounded-xl flex flex-col justify-center items-center p-4 hover:scale-105 shadow-md hover:shadow-xl transition-all"
+                >
+                  {juego.imagen ? (
+                    <img
+                      src={juego.imagen}
+                      alt={juego.nombre}
+                      className="w-36 h-36 object-cover rounded-md mb-2"
+                    />
+                  ) : (
+                    <Image className="w-14 h-14 text-gray-400 mb-2" />
+                  )}
+                  <p className="text-sm font-semibold text-gray-700 text-center">
+                    {juego.nombre}
+                  </p>
+                </motion.div>
+              ))
+            : Array.from({ length: 60 }).map((_, i) => (
+                <motion.div
+                  key={i}
+                  variants={{
+                    hidden: { opacity: 0, scale: 0.8 },
+                    visible: { opacity: 1, scale: 1 },
+                  }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-white/40 rounded-xl flex justify-center items-center p-4"
+                >
+                  <Image className="w-14 h-14 text-gray-500" />
+                </motion.div>
+              ))}
         </motion.div>
       </motion.main>
     </div>
