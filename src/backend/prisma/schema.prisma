@@ -10,12 +10,18 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement()) 
+  id        Int     @id @default(autoincrement())
+  email     String  @unique
+  name      String
+  password  String?     // Metodo tradicional
+  googleId  String? @unique // Metodo login con Google
+  avatar    String?       // Foto de perfil
+}
 
-  
-  email String @unique
-  name String 
-  password String? //Metodo tradicional
-  googleId String? @unique //Metodo login con Google
-  avatar String? //Obtener la foto de perfil
+model Juego {
+  id          Int      @id @default(autoincrement())
+  nombre      String
+  imagen      String?
+  descripcion String?
+  createdAt   DateTime @default(now())
 }

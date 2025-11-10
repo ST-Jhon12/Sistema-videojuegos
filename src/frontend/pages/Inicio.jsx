@@ -78,7 +78,7 @@ export default function Inicio() {
           transition={{ duration: 1 }}
           className="text-5xl font-extrabold text-gray-900 mb-6"
         >
-          Tu centro de <span className="text-pink-500">Gaming</span>
+          Tu centro <span className="text-pink-500">Gaming</span>
         </motion.h2>
 
         <motion.p

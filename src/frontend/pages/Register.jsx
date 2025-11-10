@@ -11,7 +11,7 @@ FaDiscord,
 
 export function Register() {
 const icons = ["🎮", "👾", "💎", "⚡", "🕹️", "🔥"];
-const particles = Array.from({ length: 90 });
+const particles = Array.from({ length: 30 });
 
 return ( <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 p-6 relative overflow-hidden">
 {/* 🌌 Iconos flotantes gamer */}
