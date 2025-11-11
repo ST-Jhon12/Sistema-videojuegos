@@ -8,6 +8,8 @@ import Inicio from '../pages/Inicio.jsx';
 import Biblioteca from '../pages/Biblioteca.jsx';
 import ProtectedRoute from '../pages/ProtectedRoute.jsx';
 import Libros from '../pages/Libros.jsx';
+import Tendencias from '../pages/Tendencias.jsx';
+import Perfil from '../pages/Perfil.jsx';
 
 function App() {
   return (
@@ -42,6 +44,22 @@ function App() {
           element={
             <ProtectedRoute>
               <Libros />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/tendencias'
+          element={
+            <ProtectedRoute>
+              <Tendencias />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/perfil'
+          element={
+            <ProtectedRoute>
+              <Perfil />
             </ProtectedRoute>
           }
         />

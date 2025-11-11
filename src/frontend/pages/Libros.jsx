@@ -1,13 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaSearch, FaUserCircle, FaMoon } from "react-icons/fa";
-import { useNavigate, Link } from "react-router-dom";
+import { FaSearch, FaMoon } from "react-icons/fa";
+import { BookOpen } from "lucide-react";
+import NavUser from "./navUser.jsx";
+
 
 export default function Libros() {
   const navigate = useNavigate();
+  const [libros, setLibros] = useState([]);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const libros = Array.from({ length: 60 });
+
+  // 📚 Cargar libros desde el backend
+  useEffect(() => {
+    fetch("http://localhost:3000/api/libros")
+      .then((res) => res.json())
+      .then((data) => setLibros(data))
+      .catch((err) => console.error("Error al cargar los libros:", err));
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-700 flex flex-col items-center">
@@ -18,7 +29,7 @@ export default function Libros() {
           className="flex items-center gap-3 cursor-pointer"
           onClick={() => navigate("/inicio")}
         >
-          <span className="text-3xl">🎮</span>
+          <span className="text-3xl">📚</span>
           <h1 className="text-2xl font-bold">GameBird</h1>
         </div>
 
@@ -30,24 +41,22 @@ export default function Libros() {
           <Link to="/biblioteca" className="hover:text-gray-200">
             Biblioteca
           </Link>
-          <Link
-            to="/libros"
-            className="text-gray-200 font-semibold border-b-2 border-white">
+          <Link to="/libros" className="text-gray-200 font-bold border-b-2 border-white">
             Libros
           </Link>
-          <a href="#" className="hover:text-gray-200">
+          <Link to="/tendencias" className="text-gray-200 font-bold">
             Tendencias
-          </a>
+          </Link>
+          
         </nav>
 
-        {/* Iconos y buscador */}
+        {/* 🔍 Buscador + iconos */}
         <div className="flex items-center gap-4 text-2xl relative">
           <FaSearch
             className="cursor-pointer hover:text-gray-200 transition"
             onClick={() => setSearchOpen(!searchOpen)}
           />
 
-          {/* 🔍 Buscador animado */}
           <AnimatePresence>
             {searchOpen && (
               <motion.div
@@ -60,7 +69,7 @@ export default function Libros() {
                 <FaSearch className="text-gray-400 mr-3" />
                 <input
                   type="text"
-                  placeholder="Buscar libros o autores..."
+                  placeholder="Buscar libros..."
                   className="flex-1 text-gray-800 outline-none text-sm bg-transparent"
                   value={searchText}
                   onChange={(e) => setSearchText(e.target.value)}
@@ -71,14 +80,11 @@ export default function Libros() {
           </AnimatePresence>
 
           <FaMoon className="cursor-pointer hover:text-gray-200 transition" />
-          <FaUserCircle
-            className="cursor-pointer hover:text-gray-200 transition"
-            onClick={() => navigate("/profile")}
-          />
+          <NavUser />
         </div>
       </header>
 
-      {/* 📚 Contenido principal */}
+      {/* 🧩 Contenido principal */}
       <motion.main
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -89,57 +95,69 @@ export default function Libros() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-5xl font-extrabold text-gray-900 mb-6"
+          className="text-4xl font-extrabold text-gray-900 mb-6"
         >
-          Tu colección de <span className="text-pink-500">Libros</span>
+          Explora los <span className="text-pink-500">Libros</span> del mundo gamer
         </motion.h2>
 
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="text-xl text-pink-100 mb-14 max-w-3xl leading-relaxed text-center"
+          className="text-lg text-pink-100 mb-14 max-w-3xl leading-relaxed text-center"
         >
-          Explora nuestra biblioteca digital, donde encontrarás desde novelas
-          clásicas hasta guías del mundo gamer. 📖✨
+          Encuentra guías, novelas y colecciones inspiradas en tus videojuegos favoritos.  
+          Expande tu conocimiento gamer 📖
         </motion.p>
 
-        <motion.h3
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="text-left w-full text-3xl font-semibold text-gray-900 mb-6"
-        >
-          Libros disponibles
-        </motion.h3>
-
-        {/* 📚 Cuadrícula animada */}
+        {/* 📘 Cuadrícula de libros */}
         <motion.div
-          className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-6"
+          className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-10 gap-8"
           initial="hidden"
           animate="visible"
           variants={{
             hidden: {},
-            visible: {
-              transition: {
-                staggerChildren: 0.03,
-              },
-            },
+            visible: { transition: { staggerChildren: 0.05 } },
           }}
         >
-          {libros.map((_, i) => (
-            <motion.div
-              key={i}
-              variants={{
-                hidden: { opacity: 0, scale: 0.8 },
-                visible: { opacity: 1, scale: 1 },
-              }}
-              transition={{ duration: 0.4 }}
-              className="w-28 h-36 bg-white/80 rounded-lg flex items-center justify-center shadow-md hover:shadow-xl hover:scale-105 transition-all cursor-pointer"
-            >
-              <span className="text-4xl text-gray-500">📘</span>
-            </motion.div>
-          ))}
+          {libros.length > 0
+            ? libros.map((libro, i) => (
+                <motion.div
+                  key={libro.id || i}
+                  variants={{
+                    hidden: { opacity: 0, scale: 0.8 },
+                    visible: { opacity: 1, scale: 1 },
+                  }}
+                  transition={{ duration: 0.4 }}
+                  className="bg-white/70 rounded-xl flex flex-col justify-center items-center p-5 hover:scale-105 shadow-md hover:shadow-xl transition-all"
+                >
+                  {libro.imagen ? (
+                    <img
+                      src={libro.imagen}
+                      alt={libro.titulo}
+                      className="w-32 h-40 object-cover rounded-md mb-3"
+                    />
+                  ) : (
+                    <BookOpen className="w-14 h-14 text-gray-400 mb-3" />
+                  )}
+                  <p className="text-sm font-semibold text-gray-700 text-center">
+                    {libro.titulo}
+                  </p>
+                </motion.div>
+              ))
+            : Array.from({ length: 60 }).map((_, i) => (
+                <motion.div
+                  key={i}
+                  variants={{
+                    hidden: { opacity: 0, scale: 0.8 },
+                    visible: { opacity: 1, scale: 1 },
+                  }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-white/40 rounded-xl flex justify-center items-center p-5"
+                >
+                  <BookOpen className="w-14 h-14 text-gray-500" />
+                </motion.div>
+              ))}
         </motion.div>
       </motion.main>
     </div>

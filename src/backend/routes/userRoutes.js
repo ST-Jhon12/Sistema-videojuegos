@@ -168,4 +168,21 @@ router.put("/:id", userController.updateUser);
  */
 router.delete("/:id", userController.deleteUser);
 
+// 🔹 Obtener usuario por ID
+router.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await userController.getUserById(id);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "Usuario no encontrado" });
+    }
+
+    res.status(200).json({ success: true, data: user });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+
 export default router;

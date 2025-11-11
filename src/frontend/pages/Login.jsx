@@ -75,7 +75,7 @@ const endX = startX + 600 + Math.random() * 400;
       transition={{ delay: 0.3 }}
       className="text-4xl font-extrabold mb-4 drop-shadow-lg"
     >
-      🎮 Bienvenido Gamer
+      🎮 Bienvenido
     </motion.h1>
 
     <motion.p
@@ -84,7 +84,7 @@ const endX = startX + 600 + Math.random() * 400;
       transition={{ delay: 0.5 }}
       className="text-lg opacity-90 mb-8"
     >
-      Inicia sesión para continuar tu aventura.
+      Inicia sesión para continuar.
     </motion.p>
 
     {/* 🧾 Formulario */}

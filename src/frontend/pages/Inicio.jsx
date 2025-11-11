@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaSearch, FaUserCircle, FaMoon } from "react-icons/fa";
+import { FaSearch, FaMoon } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
+import NavUser from "./navUser.jsx"; // ✅ Import correcto
 
 export default function Inicio() {
   const navigate = useNavigate();
@@ -36,9 +37,9 @@ export default function Inicio() {
           <Link to="/libros" className="hover:text-gray-200">
             Libros
           </Link>
-          <a href="#" className="hover:text-gray-200">
+          <Link to="/tendencias" className="hover:text-gray-200">
             Tendencias
-          </a>
+          </Link>
         </nav>
 
         {/* Iconos y buscador */}
@@ -72,10 +73,9 @@ export default function Inicio() {
           </AnimatePresence>
 
           <FaMoon className="cursor-pointer hover:text-gray-200 transition" />
-          <FaUserCircle
-            className="cursor-pointer hover:text-gray-200 transition"
-            onClick={() => navigate("/profile")}
-          />
+
+          {/* ✅ Menú desplegable de usuario */}
+          <NavUser />
         </div>
       </header>
 

@@ -17,10 +17,31 @@ export const userController = {
     }
   },
 
+  // 🔹 Obtener un usuario por ID
+  async getUserById(req, res) {
+    try {
+      const { id } = req.params;
+      const user = await userService.getUserById(id);
+
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Usuario no encontrado" });
+      }
+
+      res.status(200).json({ success: true, data: user });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Error al obtener el usuario: " + error.message,
+      });
+    }
+  },
+
   // 🔹 Crear un nuevo usuario
   async createUser(req, res) {
     try {
-      const { email, name } = req.body;
+      const { email, name, password, googleId, avatar } = req.body;
 
       if (!email || !name) {
         return res.status(400).json({
@@ -29,7 +50,14 @@ export const userController = {
         });
       }
 
-      const newUser = await userService.createUser({ email, name });
+      const newUser = await userService.createUser({
+        email,
+        name,
+        password,
+        googleId,
+        avatar,
+      });
+
       res.status(201).json({
         success: true,
         data: newUser,
@@ -38,16 +66,30 @@ export const userController = {
     } catch (error) {
       res.status(500).json({
         success: false,
-        message: error.message,
+        message: "Error al crear usuario: " + error.message,
       });
     }
   },
 
-  // 🔹 Actualizar usuario existente
+  // 🔹 Actualizar usuario existente (nombre, contraseña, avatar)
   async updateUser(req, res) {
     try {
       const { id } = req.params;
-      const updateData = req.body;
+      const { name, password, avatar } = req.body;
+
+      // Validación mínima
+      if (!name && !password && !avatar) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Debe proporcionar al menos un campo para actualizar (nombre, contraseña o avatar)",
+        });
+      }
+
+      const updateData = {};
+      if (name) updateData.name = name;
+      if (password) updateData.password = password;
+      if (avatar) updateData.avatar = avatar;
 
       const updatedUser = await userService.updateUser(id, updateData);
 
@@ -64,9 +106,10 @@ export const userController = {
         message: "Usuario actualizado exitosamente",
       });
     } catch (error) {
+      console.error("Error al actualizar usuario:", error);
       res.status(500).json({
         success: false,
-        message: error.message,
+        message: "Error al actualizar usuario: " + error.message,
       });
     }
   },
@@ -75,7 +118,6 @@ export const userController = {
   async deleteUser(req, res) {
     try {
       const { id } = req.params;
-
       const deletedUser = await userService.deleteUser(id);
 
       if (!deletedUser) {
@@ -92,7 +134,7 @@ export const userController = {
     } catch (error) {
       res.status(500).json({
         success: false,
-        message: error.message,
+        message: "Error al eliminar usuario: " + error.message,
       });
     }
   },
