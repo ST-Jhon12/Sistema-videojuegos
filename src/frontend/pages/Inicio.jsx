@@ -1,14 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaSearch, FaMoon } from "react-icons/fa";
+import { FaSearch, FaMoon, FaUserCircle } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
-import NavUser from "./navUser.jsx"; // ✅ Import correcto
+import NavUser from "./navUser.jsx";
 
 export default function Inicio() {
   const navigate = useNavigate();
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const games = Array.from({ length: 30 });
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const [juegos, setJuegos] = useState([]);
+
+  // 🔹 Cargar los juegos desde el backend
+  useEffect(() => {
+    fetch("http://localhost:3000/api/juegos")
+      .then((res) => {
+        if (!res.ok) throw new Error("Error en la respuesta del servidor");
+        return res.json();
+      })
+      .then((data) => setJuegos(data))
+      .catch((err) => console.error("Error al obtener juegos:", err));
+  }, []);
+
+  // 🔍 Filtrar los juegos si se usa el buscador
+  const juegosFiltrados = juegos.filter((juego) =>
+    juego.nombre.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-slate-700 flex flex-col items-center">
@@ -42,14 +59,14 @@ export default function Inicio() {
           </Link>
         </nav>
 
-        {/* Iconos y buscador */}
+        {/* Iconos y menú usuario */}
         <div className="flex items-center gap-4 text-2xl relative">
+          {/* 🔍 Buscador */}
           <FaSearch
             className="cursor-pointer hover:text-gray-200 transition"
             onClick={() => setSearchOpen(!searchOpen)}
           />
 
-          {/* 🔍 Buscador animado */}
           <AnimatePresence>
             {searchOpen && (
               <motion.div
@@ -62,7 +79,7 @@ export default function Inicio() {
                 <FaSearch className="text-gray-400 mr-3" />
                 <input
                   type="text"
-                  placeholder="Buscar juegos o libros..."
+                  placeholder="Buscar juegos..."
                   className="flex-1 text-gray-800 outline-none text-sm bg-transparent"
                   value={searchText}
                   onChange={(e) => setSearchText(e.target.value)}
@@ -72,10 +89,17 @@ export default function Inicio() {
             )}
           </AnimatePresence>
 
+          {/* 🌙 Modo oscuro */}
           <FaMoon className="cursor-pointer hover:text-gray-200 transition" />
 
-          {/* ✅ Menú desplegable de usuario */}
-          <NavUser />
+          {/* 👤 Icono de usuario */}
+          <div className="relative">
+            <FaUserCircle
+              className="cursor-pointer text-3xl hover:text-pink-300 transition"
+              onClick={() => setShowUserMenu(!showUserMenu)}
+            />
+            <NavUser show={showUserMenu} />
+          </div>
         </div>
       </header>
 
@@ -115,7 +139,7 @@ export default function Inicio() {
           Juegos destacados
         </motion.h3>
 
-        {/* 🎮 Cuadrícula animada */}
+        {/* 🎮 Cuadrícula animada de juegos */}
         <motion.div
           className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6"
           initial="hidden"
@@ -123,25 +147,36 @@ export default function Inicio() {
           variants={{
             hidden: {},
             visible: {
-              transition: {
-                staggerChildren: 0.05,
-              },
+              transition: { staggerChildren: 0.05 },
             },
           }}
         >
-          {games.map((_, i) => (
-            <motion.div
-              key={i}
-              variants={{
-                hidden: { opacity: 0, scale: 0.8 },
-                visible: { opacity: 1, scale: 1 },
-              }}
-              transition={{ duration: 0.4 }}
-              className="bg-white/70 rounded-xl flex items-center justify-center p-4 shadow-md hover:shadow-xl hover:scale-105 transition-all cursor-pointer"
-            >
-              <span className="text-5xl text-gray-500">🖼️</span>
-            </motion.div>
-          ))}
+          {juegosFiltrados.length > 0 ? (
+            juegosFiltrados.map((juego) => (
+              <motion.div
+                key={juego.id}
+                variants={{
+                  hidden: { opacity: 0, scale: 0.8 },
+                  visible: { opacity: 1, scale: 1 },
+                }}
+                transition={{ duration: 0.4 }}
+                className="bg-white/70 rounded-xl flex flex-col items-center p-3 shadow-md hover:shadow-xl hover:scale-105 transition-all cursor-pointer"
+              >
+                <img
+                  src={juego.imagen || "https://via.placeholder.com/150"}
+                  alt={juego.nombre}
+                  className="rounded-lg w-full h-24 object-cover mb-2"
+                />
+                <h4 className="text-sm font-semibold text-center text-gray-800">
+                  {juego.nombre}
+                </h4>
+              </motion.div>
+            ))
+          ) : (
+            <p className="text-gray-100 col-span-full text-center">
+              Cargando juegos...
+            </p>
+          )}
         </motion.div>
       </motion.main>
     </div>

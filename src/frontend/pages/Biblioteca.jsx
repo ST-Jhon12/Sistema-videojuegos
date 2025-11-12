@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaSearch, FaMoon } from "react-icons/fa";
+import { FaSearch, FaMoon, FaUserCircle } from "react-icons/fa";
 import { Image } from "lucide-react";
 import NavUser from "./navUser.jsx";
-
 
 export default function Biblioteca() {
   const navigate = useNavigate();
   const [juegos, setJuegos] = useState([]);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
-  // 📦 Cargar juegos del backend
   useEffect(() => {
     fetch("http://localhost:3000/api/juegos")
       .then((res) => res.json())
@@ -38,19 +37,23 @@ export default function Biblioteca() {
           <Link to="/inicio" className="hover:text-gray-200">
             Inicio
           </Link>
-          <Link to="/biblioteca" className="text-gray-200 font-bold">
+          <Link
+            to="/biblioteca"
+            className="text-gray-200 font-semibold border-b-2 border-white"
+          >
             Biblioteca
           </Link>
           <Link to="/libros" className="hover:text-gray-200">
             Libros
           </Link>
-          <Link to="/tendencias" className="text-gray-200 font-bold">
+          <Link to="/tendencias" className="hover:text-gray-200">
             Tendencias
           </Link>
         </nav>
 
-        {/* 🔍 Buscador + iconos */}
+        {/* Iconos y menú usuario */}
         <div className="flex items-center gap-4 text-2xl relative">
+          {/* 🔍 Buscador */}
           <FaSearch
             className="cursor-pointer hover:text-gray-200 transition"
             onClick={() => setSearchOpen(!searchOpen)}
@@ -68,7 +71,7 @@ export default function Biblioteca() {
                 <FaSearch className="text-gray-400 mr-3" />
                 <input
                   type="text"
-                  placeholder="Buscar juegos o libros..."
+                  placeholder="Buscar juegos..."
                   className="flex-1 text-gray-800 outline-none text-sm bg-transparent"
                   value={searchText}
                   onChange={(e) => setSearchText(e.target.value)}
@@ -78,8 +81,17 @@ export default function Biblioteca() {
             )}
           </AnimatePresence>
 
+          {/* 🌙 Modo oscuro */}
           <FaMoon className="cursor-pointer hover:text-gray-200 transition" />
-          <NavUser />
+
+          {/* 👤 Icono de usuario */}
+          <div className="relative">
+            <FaUserCircle
+              className="cursor-pointer text-3xl hover:text-pink-300 transition"
+              onClick={() => setShowUserMenu(!showUserMenu)}
+            />
+            <NavUser show={showUserMenu} />
+          </div>
         </div>
       </header>
 
@@ -90,37 +102,21 @@ export default function Biblioteca() {
         transition={{ duration: 0.8 }}
         className="bg-[#87a8be] w-11/12 md:w-10/12 lg:w-8/12 mt-36 mb-16 p-14 rounded-2xl shadow-lg flex flex-col items-center"
       >
-        <motion.h2
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-4xl font-extrabold text-gray-900 mb-6"
-        >
+        <h2 className="text-4xl font-extrabold text-gray-900 mb-6">
           Tu <span className="text-pink-500">Biblioteca</span> personal
-        </motion.h2>
+        </h2>
+        <p className="text-lg text-pink-100 mb-12 max-w-3xl text-center">
+          Explora todos los juegos que forman parte de tu colección gamer 🎮
+        </p>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="text-lg text-pink-100 mb-12 max-w-3xl leading-relaxed text-center"
-        >
-          Aquí puedes ver todos los juegos que forman parte de tu colección.  
-          Explora y redescubre tus títulos favoritos 🎮
-        </motion.p>
-
-        {/* 🕹️ Cuadrícula animada de juegos */}
+        {/* 🎮 Cuadrícula de juegos */}
         <motion.div
           className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-10 gap-6"
           initial="hidden"
           animate="visible"
           variants={{
             hidden: {},
-            visible: {
-              transition: {
-                staggerChildren: 0.05,
-              },
-            },
+            visible: { transition: { staggerChildren: 0.05 } },
           }}
         >
           {juegos.length > 0
@@ -138,7 +134,7 @@ export default function Biblioteca() {
                     <img
                       src={juego.imagen}
                       alt={juego.nombre}
-                      className="w-36 h-36 object-cover rounded-md mb-2"
+                      className="w-32 h-32 object-cover rounded-md mb-2"
                     />
                   ) : (
                     <Image className="w-14 h-14 text-gray-400 mb-2" />

@@ -18,9 +18,9 @@ export default function NavUser({ show }) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.3 }}
-          className="absolute right-8 top-16 bg-slate-600/95 rounded-xl shadow-lg w-60 overflow-hidden border border-slate-500"
+          className="absolute right-0 top-12 bg-slate-600/95 rounded-xl shadow-lg w-60 overflow-hidden border border-slate-500 z-50"
         >
-          {/* 🔹 Header clickeable que lleva a Ajustes */}
+          {/* Header clickeable */}
           <div
             onClick={() => navigate("/perfil")}
             className="cursor-pointer bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-3 text-white font-semibold text-lg hover:brightness-110 transition"

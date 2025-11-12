@@ -1,18 +1,25 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaSearch, FaMoon, FaFireAlt } from "react-icons/fa";
-import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from "recharts";
+import { FaSearch, FaMoon, FaUserCircle, FaFireAlt } from "react-icons/fa";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  ResponsiveContainer,
+} from "recharts";
 import { Gamepad2 } from "lucide-react";
 import NavUser from "./navUser.jsx";
-
-
 
 export default function Tendencias() {
   const navigate = useNavigate();
   const [tendencias, setTendencias] = useState([]);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   useEffect(() => {
     fetch("http://localhost:3000/api/tendencias")
@@ -21,7 +28,6 @@ export default function Tendencias() {
       .catch((err) => console.error("Error al cargar las tendencias:", err));
   }, []);
 
-  // Datos de ejemplo para el gráfico (puedes reemplazar con tu API)
   const dataGrafico = [
     { name: "Ene", jugadores: 2000 },
     { name: "Feb", jugadores: 3200 },
@@ -55,13 +61,17 @@ export default function Tendencias() {
           <Link to="/libros" className="hover:text-gray-200">
             Libros
           </Link>
-          <Link to="/tendencias" className="text-gray-200 font-bold border-b-2 border-white">
+          <Link
+            to="/tendencias"
+            className="text-gray-200 font-semibold border-b-2 border-white"
+          >
             Tendencias
           </Link>
         </nav>
 
-        {/* 🔍 Buscador + iconos */}
+        {/* Iconos y menú usuario */}
         <div className="flex items-center gap-4 text-2xl relative">
+          {/* 🔍 Buscador */}
           <FaSearch
             className="cursor-pointer hover:text-gray-200 transition"
             onClick={() => setSearchOpen(!searchOpen)}
@@ -89,8 +99,17 @@ export default function Tendencias() {
             )}
           </AnimatePresence>
 
+          {/* 🌙 Modo oscuro */}
           <FaMoon className="cursor-pointer hover:text-gray-200 transition" />
-          <NavUser />
+
+          {/* 👤 Icono de usuario */}
+          <div className="relative">
+            <FaUserCircle
+              className="cursor-pointer text-3xl hover:text-pink-300 transition"
+              onClick={() => setShowUserMenu(!showUserMenu)}
+            />
+            <NavUser show={showUserMenu} />
+          </div>
         </div>
       </header>
 
@@ -101,30 +120,24 @@ export default function Tendencias() {
         transition={{ duration: 0.8 }}
         className="bg-[#87a8be] w-11/12 md:w-10/12 lg:w-8/12 mt-36 mb-20 p-14 rounded-2xl shadow-lg flex flex-col items-center"
       >
-        {/* Título principal */}
+        {/* 🔥 Título */}
         <motion.h2
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           className="text-4xl font-extrabold text-gray-900 mb-6 flex items-center gap-2"
         >
-          <FaFireAlt className="text-pink-600 text-4xl" />  
+          <FaFireAlt className="text-pink-600 text-4xl" />
           Juegos en <span className="text-pink-500 ml-2">Tendencia</span>
         </motion.h2>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="text-lg text-pink-100 mb-14 max-w-3xl leading-relaxed text-center"
-        >
-          Descubre los títulos más jugados y seguidos por la comunidad gamer.  
-          Observa su crecimiento, estadísticas y logros más recientes ⚡
-        </motion.p>
+        <p className="text-lg text-pink-100 mb-14 max-w-3xl text-center">
+          Descubre los títulos más jugados y seguidos por la comunidad gamer ⚡
+        </p>
 
-        {/* 🔥 Lista de tendencias */}
+        {/* 🔥 Cuadrícula de tendencias */}
         <motion.div
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-16"
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8 mb-16"
           initial="hidden"
           animate="visible"
           variants={{
@@ -141,7 +154,7 @@ export default function Tendencias() {
                     visible: { opacity: 1, scale: 1 },
                   }}
                   transition={{ duration: 0.4 }}
-                  className="bg-white/70 rounded-xl flex flex-col justify-center items-center p-4 hover:scale-105 shadow-md hover:shadow-xl transition-all"
+                  className="bg-white/70 rounded-xl flex flex-col justify-center items-center p-5 hover:scale-105 shadow-md hover:shadow-xl transition-all"
                 >
                   {juego.imagen ? (
                     <img
@@ -156,7 +169,7 @@ export default function Tendencias() {
                     {juego.nombre}
                   </p>
                   <span className="text-xs text-pink-500 mt-1">
-                    {juego.jugadoresActivos || "🔥 Tendencia"}
+                    {juego.jugadoresActivos || "🔥 Popular"}
                   </span>
                 </motion.div>
               ))
@@ -175,7 +188,7 @@ export default function Tendencias() {
               ))}
         </motion.div>
 
-        {/* 📊 Gráfico de popularidad */}
+        {/* 📊 Gráfico de crecimiento */}
         <div className="w-full h-80 bg-white/70 rounded-2xl p-6 shadow-md mb-12">
           <h3 className="text-xl font-semibold text-gray-800 mb-4">
             Crecimiento de jugadores (mensual)
@@ -186,29 +199,40 @@ export default function Tendencias() {
               <XAxis dataKey="name" stroke="#555" />
               <YAxis />
               <Tooltip />
-              <Line type="monotone" dataKey="jugadores" stroke="#ec4899" strokeWidth={3} />
+              <Line
+                type="monotone"
+                dataKey="jugadores"
+                stroke="#ec4899"
+                strokeWidth={3}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
 
-        {/* 🏆 Logros */}
+        {/* 🏆 Logros destacados */}
         <section className="w-full text-center">
-          <h3 className="text-2xl font-bold text-gray-900 mb-6">🏆 Logros destacados</h3>
+          <h3 className="text-2xl font-bold text-gray-900 mb-6">
+            🏆 Logros destacados
+          </h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {["Más jugado", "Mayor crecimiento", "Top stream", "Mejor valorado"].map((logro, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 * i }}
-                className="bg-white/70 p-5 rounded-xl shadow-md hover:shadow-xl transition-all"
-              >
-                <h4 className="text-lg font-semibold text-pink-600">{logro}</h4>
-                <p className="text-gray-800 text-sm mt-2">
-                  {["Fortnite", "Genshin Impact", "Valorant", "Minecraft"][i]}
-                </p>
-              </motion.div>
-            ))}
+            {["Más jugado", "Mayor crecimiento", "Top stream", "Mejor valorado"].map(
+              (logro, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 * i }}
+                  className="bg-white/70 p-5 rounded-xl shadow-md hover:shadow-xl transition-all"
+                >
+                  <h4 className="text-lg font-semibold text-pink-600">
+                    {logro}
+                  </h4>
+                  <p className="text-gray-800 text-sm mt-2">
+                    {["Fortnite", "Genshin Impact", "Valorant", "Minecraft"][i]}
+                  </p>
+                </motion.div>
+              )
+            )}
           </div>
         </section>
       </motion.main>

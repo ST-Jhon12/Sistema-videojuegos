@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaSearch, FaMoon } from "react-icons/fa";
+import { FaSearch, FaMoon, FaUserCircle } from "react-icons/fa";
 import { BookOpen } from "lucide-react";
 import NavUser from "./navUser.jsx";
-
 
 export default function Libros() {
   const navigate = useNavigate();
   const [libros, setLibros] = useState([]);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
-  // 📚 Cargar libros desde el backend
   useEffect(() => {
     fetch("http://localhost:3000/api/libros")
       .then((res) => res.json())
@@ -41,17 +40,20 @@ export default function Libros() {
           <Link to="/biblioteca" className="hover:text-gray-200">
             Biblioteca
           </Link>
-          <Link to="/libros" className="text-gray-200 font-bold border-b-2 border-white">
+          <Link
+            to="/libros"
+            className="text-gray-200 font-semibold border-b-2 border-white"
+          >
             Libros
           </Link>
-          <Link to="/tendencias" className="text-gray-200 font-bold">
+          <Link to="/tendencias" className="hover:text-gray-200">
             Tendencias
           </Link>
-          
         </nav>
 
-        {/* 🔍 Buscador + iconos */}
+        {/* Iconos y menú usuario */}
         <div className="flex items-center gap-4 text-2xl relative">
+          {/* 🔍 Buscador */}
           <FaSearch
             className="cursor-pointer hover:text-gray-200 transition"
             onClick={() => setSearchOpen(!searchOpen)}
@@ -79,8 +81,17 @@ export default function Libros() {
             )}
           </AnimatePresence>
 
+          {/* 🌙 Modo oscuro */}
           <FaMoon className="cursor-pointer hover:text-gray-200 transition" />
-          <NavUser />
+
+          {/* 👤 Icono de usuario */}
+          <div className="relative">
+            <FaUserCircle
+              className="cursor-pointer text-3xl hover:text-pink-300 transition"
+              onClick={() => setShowUserMenu(!showUserMenu)}
+            />
+            <NavUser show={showUserMenu} />
+          </div>
         </div>
       </header>
 
@@ -91,26 +102,14 @@ export default function Libros() {
         transition={{ duration: 0.8 }}
         className="bg-[#87a8be] w-11/12 md:w-10/12 lg:w-8/12 mt-36 mb-16 p-14 rounded-2xl shadow-lg flex flex-col items-center"
       >
-        <motion.h2
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-4xl font-extrabold text-gray-900 mb-6"
-        >
+        <h2 className="text-4xl font-extrabold text-gray-900 mb-6">
           Explora los <span className="text-pink-500">Libros</span> del mundo gamer
-        </motion.h2>
+        </h2>
+        <p className="text-lg text-pink-100 mb-12 max-w-3xl text-center">
+          Encuentra guías, novelas y colecciones inspiradas en tus videojuegos favoritos 📖
+        </p>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="text-lg text-pink-100 mb-14 max-w-3xl leading-relaxed text-center"
-        >
-          Encuentra guías, novelas y colecciones inspiradas en tus videojuegos favoritos.  
-          Expande tu conocimiento gamer 📖
-        </motion.p>
-
-        {/* 📘 Cuadrícula de libros */}
+        {/* 📚 Cuadrícula de libros */}
         <motion.div
           className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-10 gap-8"
           initial="hidden"
@@ -135,7 +134,7 @@ export default function Libros() {
                     <img
                       src={libro.imagen}
                       alt={libro.titulo}
-                      className="w-32 h-40 object-cover rounded-md mb-3"
+                      className="w-28 h-36 object-cover rounded-md mb-3"
                     />
                   ) : (
                     <BookOpen className="w-14 h-14 text-gray-400 mb-3" />

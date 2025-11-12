@@ -169,10 +169,17 @@ router.put("/:id", userController.updateUser);
 router.delete("/:id", userController.deleteUser);
 
 // 🔹 Obtener usuario por ID
+// Obtener usuario por ID de forma segura
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await userController.getUserById(id);
+    const userId = Number(id);
+
+    if (isNaN(userId)) {
+      return res.status(400).json({ success: false, message: "ID de usuario inválido" });
+    }
+
+    const user = await userController.getUserById(userId);
 
     if (!user) {
       return res.status(404).json({ success: false, message: "Usuario no encontrado" });
@@ -180,7 +187,8 @@ router.get("/:id", async (req, res) => {
 
     res.status(200).json({ success: true, data: user });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error("Error en GET /api/users/:id ->", error);
+    res.status(500).json({ success: false, message: "Error interno del servidor" });
   }
 });
 

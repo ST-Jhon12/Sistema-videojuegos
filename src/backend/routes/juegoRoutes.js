@@ -1,5 +1,6 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
+import { guardarJuegosEnDB } from "../services/JuegosServices.js"; // 👈 Importamos el servicio
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -25,7 +26,9 @@ const prisma = new PrismaClient();
  */
 router.get("/", async (req, res) => {
   try {
-    const juegos = await prisma.juego.findMany();
+    const juegos = await prisma.juego.findMany({
+      orderBy: { createdAt: "desc" },
+    });
     res.json(juegos);
   } catch (error) {
     console.error("Error al obtener los juegos:", error);
@@ -71,6 +74,30 @@ router.post("/", async (req, res) => {
   } catch (error) {
     console.error("Error al crear el juego:", error);
     res.status(500).json({ error: "Error al crear el juego" });
+  }
+});
+
+/**
+ * @swagger
+ * /api/juegos/sincronizar:
+ *   post:
+ *     summary: Sincronizar juegos desde una API externa
+ *     tags: [Juegos]
+ *     responses:
+ *       200:
+ *         description: Juegos sincronizados exitosamente
+ *       500:
+ *         description: Error al sincronizar juegos
+ */
+// dentro de /sincronizar route
+router.post("/sincronizar", async (req, res) => {
+  try {
+    const usePaginated = req.query.paged === "true";
+    const resultado = await guardarJuegosEnDB({ usePaginated });
+    res.json({ ok: true, ...resultado });
+  } catch (error) {
+    console.error("Error al sincronizar los juegos:", error);
+    res.status(500).json({ error: "Error al sincronizar los juegos" });
   }
 });
 
