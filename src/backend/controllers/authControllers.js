@@ -82,6 +82,22 @@ export const authControllers = {
   // 🧑‍💼 Obtener datos del usuario autenticado
   async me(req, res) {
     try {
+      // Primero: si Passport puso req.user (sesión), usamos eso
+      if (req.user) {
+        const u = req.user;
+        return res.status(200).json({
+          success: true,
+          data: {
+            id: u.id,
+            name: u.name,
+            email: u.email,
+            avatar: u.avatar,
+            googleId: u.googleId,
+          },
+        });
+      }
+
+      // Si no hay sesión, intentamos por Authorization: Bearer <token>
       const authHeader = req.headers.authorization;
       if (!authHeader)
         return res.status(401).json({ success: false, message: "Token requerido" });

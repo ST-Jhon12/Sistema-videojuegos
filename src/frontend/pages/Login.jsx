@@ -27,8 +27,11 @@ export function Login() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
 
-      // ✔ Ya NO guardamos token, solo datos del usuario si quieres
+      // ✔ Guardamos datos del usuario y token para futuras peticiones (ej. /api/auth/me)
       localStorage.setItem("user", JSON.stringify(data.data.user));
+      if (data.data.token) {
+        localStorage.setItem("token", data.data.token);
+      }
 
       navigate("/inicio"); // ✔ login-success ya no se usa
 

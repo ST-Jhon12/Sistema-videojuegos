@@ -21,6 +21,7 @@ export const userController = {
   async getUserById(req, res) {
     try {
       const { id } = req.params;
+      // Obtenemos el usuario (puede incluir password internamente)
       const user = await userService.getUserById(id);
 
       if (!user) {
@@ -29,7 +30,11 @@ export const userController = {
           .json({ success: false, message: "Usuario no encontrado" });
       }
 
-      res.status(200).json({ success: true, data: user });
+      // No devolvemos la contraseña al cliente. En su lugar indicamos si el usuario tiene contraseña.
+      const { password, ...rest } = user;
+      const hasPassword = !!password;
+
+      res.status(200).json({ success: true, data: { ...rest, hasPassword } });
     } catch (error) {
       res.status(500).json({
         success: false,
@@ -75,9 +80,9 @@ export const userController = {
   async updateUser(req, res) {
     try {
       const { id } = req.params;
-      const { name, password, avatar } = req.body;
+      const { name, password, avatar, email } = req.body;
 
-      if (!name && !password && !avatar) {
+      if (!name && !password && !avatar && !email) {
         return res.status(400).json({
           success: false,
           message:
@@ -89,6 +94,7 @@ export const userController = {
       if (name) updateData.name = name;
       if (password) updateData.password = password;
       if (avatar) updateData.avatar = avatar;
+      if (email) updateData.email = email;
 
       const updatedUser = await userService.updateUser(id, updateData);
 

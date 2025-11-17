@@ -25,3 +25,13 @@ model Juego {
   descripcion String?
   createdAt   DateTime @default(now())
 }
+
+model Libro {
+  id          Int      @id @default(autoincrement())
+  titulo      String
+  descripcion String?
+  autor       String?
+  imagen      String?
+  publishedAt DateTime?
+  createdAt   DateTime @default(now())
+}

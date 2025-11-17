@@ -8,6 +8,7 @@ import userRoutes from "./routes/userRoutes.js";
 import emailRoutes from "./routes/emailRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import juegoRoutes from "./routes/juegoRoutes.js"; 
+import librosRoutes from "./routes/librosRoutes.js";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./swagger.js";
 
@@ -47,6 +48,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/email", emailRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/juegos", juegoRoutes); 
+app.use("/api/libros", librosRoutes);
 
 // 🚀 Servidor
 app.listen(PORT, () => {
