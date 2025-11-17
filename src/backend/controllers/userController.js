@@ -71,13 +71,12 @@ export const userController = {
     }
   },
 
-  // 🔹 Actualizar usuario existente (nombre, contraseña, avatar)
+  // 🔹 Actualizar usuario por ID
   async updateUser(req, res) {
     try {
       const { id } = req.params;
       const { name, password, avatar } = req.body;
 
-      // Validación mínima
       if (!name && !password && !avatar) {
         return res.status(400).json({
           success: false,
@@ -107,6 +106,47 @@ export const userController = {
       });
     } catch (error) {
       console.error("Error al actualizar usuario:", error);
+      res.status(500).json({
+        success: false,
+        message: "Error al actualizar usuario: " + error.message,
+      });
+    }
+  },
+
+  // 🔹 NUEVO → Actualizar usuario por nombre
+  async updateUserByName(req, res) {
+    try {
+      const { name } = req.params;
+      const data = req.body;
+
+      if (!data || Object.keys(data).length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Debe enviar datos para actualizar",
+        });
+      }
+
+      // Buscar usuario por nombre
+      const user = await userService.getUserByName(name);
+
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: "Usuario no encontrado con ese nombre",
+        });
+      }
+
+      // Actualizar usando su id
+      const updated = await userService.updateUser(user.id, data);
+
+      res.status(200).json({
+        success: true,
+        message: "Usuario actualizado correctamente por nombre",
+        data: updated,
+      });
+
+    } catch (error) {
+      console.error("Error al actualizar por nombre:", error);
       res.status(500).json({
         success: false,
         message: "Error al actualizar usuario: " + error.message,

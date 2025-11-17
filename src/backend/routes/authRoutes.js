@@ -46,9 +46,23 @@ router.post("/login", authControllers.login);
  *      401:
  *        description: Token inválido o expirado
  */
-router.get("/verify", authControllers.verifyToken); // ✅ usar el controlador
+router.get("/verify", authControllers.verifyToken); 
 
-// 🔹 Google OAuth
+/**
+ * 🔥🔥🔥 AQUI SE AGREGA LA NUEVA RUTA 🔥🔥🔥
+ * @swagger
+ * /api/auth/me:
+ *  get:
+ *    summary: Obtiene la información del usuario autenticado
+ *    tags: [Auth]
+ *    security:
+ *      - BearerAuth: []
+ */
+router.get("/me", authControllers.me);
+// -----------------------------------------------------------
+
+
+ // 🔹 Google OAuth
 router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
 router.get(

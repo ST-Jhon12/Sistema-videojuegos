@@ -168,6 +168,42 @@ router.put("/:id", userController.updateUser);
  */
 router.delete("/:id", userController.deleteUser);
 
+/**
+ * @swagger
+ * /api/users/name/{name}:
+ *   put:
+ *     summary: Actualizar un usuario por su nombre
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: name
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Nombre del usuario a actualizar
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               estado:
+ *                 type: string
+ *           example:
+ *             email: "nuevoemail@example.com"
+ *     responses:
+ *       200:
+ *         description: Usuario actualizado correctamente
+ *       404:
+ *         description: Usuario no encontrado
+ */
+router.put("/name/:name", userController.updateUserByName);
+
 // 🔹 Obtener usuario por ID
 // Obtener usuario por ID de forma segura
 router.get("/:id", async (req, res) => {

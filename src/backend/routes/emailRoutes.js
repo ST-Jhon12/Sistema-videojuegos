@@ -1,7 +1,15 @@
 import express from "express";
-import { registerUser } from "../controllers/emailController.js";
+import { registerUser, recoverPassword } from "../controllers/emailController.js";
 
 const router = express.Router();
+
+/**
+ * @swagger
+ * tags:
+ *   name: Email
+ *   description: Endpoints relacionados con envío de correos
+ */
+
 
 /**
  * @swagger
@@ -24,11 +32,40 @@ const router = express.Router();
  *                 example: Usuario
  *     responses:
  *       200:
- *         description: Usuario registrado y correo enviado correctamente
+ *         description: Usuario creado y correo enviado
  *       500:
- *         description: Error al registrar el usuario o enviar el correo
+ *         description: Error enviando correo
  */
-
 router.post("/register", registerUser);
+
+
+
+/**
+ * @swagger
+ * /api/email/recover-password:
+ *   post:
+ *     summary: Enviar un correo de recuperación de contraseña
+ *     tags: [Email]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: usuario@gmail.com
+ *     responses:
+ *       200:
+ *         description: Correo de recuperación enviado
+ *       400:
+ *         description: El email es obligatorio
+ *       500:
+ *         description: Error enviando correo de recuperación
+ */
+router.post("/recover-password", recoverPassword);
+
+
 
 export default router;

@@ -23,6 +23,7 @@ body: JSON.stringify({ email, password }),
   if (!res.ok) throw new Error(data.message);
 
   localStorage.setItem("authToken", data.data.token);
+  localStorage.setItem("user", JSON.stringify(data.data.user));
   navigate(`/login-success?token=${data.data.token}`);
 } catch (error) {
   console.error("Error al iniciar sesión:", error);
