@@ -1,31 +1,44 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import { FaSearch, FaMoon, FaUserCircle } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
-import NavUser from "./navUser.jsx";
+import NavUser from "./NavUser.jsx";
 
 export default function Inicio() {
   const navigate = useNavigate();
+  const [juegos, setJuegos] = useState([]);
+  const [filtro, setFiltro] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [juegos, setJuegos] = useState([]);
+  const controls = useAnimation();
 
-  // 🔹 Cargar los juegos desde el backend
+  const juegosFiltrados = filtro
+    ? juegos.filter((juego) =>
+        juego.nombre.toLowerCase().includes(filtro.toLowerCase())
+      )
+    : juegos;
+
   useEffect(() => {
+    console.log("🔄 Cargando juegos...");
+
     fetch("http://localhost:3000/api/juegos")
       .then((res) => {
         if (!res.ok) throw new Error("Error en la respuesta del servidor");
         return res.json();
       })
-      .then((data) => setJuegos(data))
-      .catch((err) => console.error("Error al obtener juegos:", err));
+      .then((data) => {
+        console.log("✅ Juegos cargados:", data);
+        setJuegos(data);
+      })
+      .catch((err) => console.error("❌ Error:", err));
   }, []);
 
-  // 🔍 Filtrar los juegos si se usa el buscador
-  const juegosFiltrados = juegos.filter((juego) =>
-    juego.nombre.toLowerCase().includes(searchText.toLowerCase())
-  );
+  useEffect(() => {
+    if (juegosFiltrados.length > 0) {
+      controls.start("visible");
+    }
+  }, [juegosFiltrados, controls]);
 
   return (
     <div className="min-h-screen bg-slate-700 flex flex-col items-center">
@@ -143,7 +156,7 @@ export default function Inicio() {
         <motion.div
           className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6"
           initial="hidden"
-          animate="visible"
+          animate={controls}
           variants={{
             hidden: {},
             visible: {
@@ -157,9 +170,14 @@ export default function Inicio() {
                 key={juego.id}
                 variants={{
                   hidden: { opacity: 0, scale: 0.8 },
-                  visible: { opacity: 1, scale: 1 },
+                  visible: {
+                    opacity: 1,
+                    scale: 1,
+                    transition: {
+                      duration: 0.4,
+                    },
+                  },
                 }}
-                transition={{ duration: 0.4 }}
                 className="bg-white/70 rounded-xl flex flex-col items-center p-3 shadow-md hover:shadow-xl hover:scale-105 transition-all cursor-pointer"
               >
                 <img

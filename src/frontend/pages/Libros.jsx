@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaSearch, FaMoon, FaUserCircle } from "react-icons/fa";
 import { BookOpen } from "lucide-react";
-import NavUser from "./navUser.jsx";
+import NavUser from "./NavUser.jsx";
 
 export default function Libros() {
   const navigate = useNavigate();

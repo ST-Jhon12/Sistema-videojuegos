@@ -12,7 +12,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Gamepad2 } from "lucide-react";
-import NavUser from "./navUser.jsx";
+import NavUser from "./NavUser.jsx";
 
 export default function Tendencias() {
   const navigate = useNavigate();

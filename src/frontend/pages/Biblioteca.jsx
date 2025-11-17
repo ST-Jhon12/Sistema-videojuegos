@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useAnimation} from "framer-motion";
 import { FaSearch, FaMoon, FaUserCircle } from "react-icons/fa";
 import { Image } from "lucide-react";
-import NavUser from "./navUser.jsx";
+import NavUser from "./NavUser.jsx";
 
 export default function Biblioteca() {
   const navigate = useNavigate();
@@ -11,13 +11,27 @@ export default function Biblioteca() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const controls = useAnimation();
 
   useEffect(() => {
+    console.log("🔄 Cargando juegos...");
     fetch("http://localhost:3000/api/juegos")
-      .then((res) => res.json())
-      .then((data) => setJuegos(data))
-      .catch((err) => console.error("Error al cargar los juegos:", err));
+      .then((res) => {
+        if (!res.ok) throw new Error("Error en la respuesta del servidor");
+        return res.json();
+      })
+      .then((data) => {
+        console.log("✅ Juegos cargados:", data);
+        setJuegos(data);
+      })
+      .catch((err) => console.error("❌ Error:", err));
   }, []);
+
+    useEffect(() => {
+    if (juegos.length > 0) {
+      controls.start("visible");
+    }
+  }, [juegos, controls]); 
 
   return (
     <div className="min-h-screen bg-slate-700 flex flex-col items-center">
@@ -113,7 +127,7 @@ export default function Biblioteca() {
         <motion.div
           className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-10 gap-6"
           initial="hidden"
-          animate="visible"
+          animate={controls}
           variants={{
             hidden: {},
             visible: { transition: { staggerChildren: 0.05 } },
@@ -122,12 +136,17 @@ export default function Biblioteca() {
           {juegos.length > 0
             ? juegos.map((juego, i) => (
                 <motion.div
-                  key={juego.id || i}
+                  key={juego.id}
                   variants={{
                     hidden: { opacity: 0, scale: 0.8 },
-                    visible: { opacity: 1, scale: 1 },
+                    visible: {
+                      opacity: 1,
+                      scale: 1,
+                      transition: {
+                        duration: 0.4,
+                      },
+                    },
                   }}
-                  transition={{ duration: 0.4 }}
                   className="bg-white/70 rounded-xl flex flex-col justify-center items-center p-4 hover:scale-105 shadow-md hover:shadow-xl transition-all"
                 >
                   {juego.imagen ? (
